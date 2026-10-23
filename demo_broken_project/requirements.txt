@@ -1,0 +1,4 @@
+ollama
+transformers
+torch
+fastapi

@@ -1,0 +1,34 @@
+# Python
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Environments (except demo folder test files)
+.env
+.env.local
+*.pem
+*.key
+
+# Distribution / Packaging
+build/
+dist/
+*.egg-info/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Temp clone directories
+.temp_clones/
+temp_repo_*
