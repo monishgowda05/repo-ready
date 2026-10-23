@@ -21,7 +21,7 @@ import streamlit as st
 import pandas as pd
 
 from scanner import scan_repository
-from auditor import run_audit, is_ollama_running
+from auditor import run_audit, is_ollama_running, is_model_installed
 from fixer import heal_repository
 
 # Page configuration
@@ -104,7 +104,6 @@ with st.sidebar:
     st.subheader("Local SLM Engine")
 
     ollama_active = is_ollama_running()
-    from auditor import is_model_installed
     model_ready = is_model_installed(selected_model if 'selected_model' in locals() else "gemma2:2b")
 
     if ollama_active and model_ready:
