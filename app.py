@@ -183,48 +183,6 @@ st.markdown("""
         transform: translateY(-1px) !important;
     }
 
-    /* Aceternity Floating Dock */
-    .floating-dock-container {
-        display: flex;
-        justify-content: center;
-        margin: 20px 0 30px 0;
-    }
-    .floating-dock {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 20px;
-        background: rgba(18, 18, 24, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 9999px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-    }
-    .dock-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        color: #e4e4e7;
-        font-size: 1.3rem;
-        cursor: pointer;
-        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        text-decoration: none;
-    }
-    .dock-item:hover {
-        transform: scale(1.3) translateY(-6px);
-        background: rgba(99, 102, 241, 0.25);
-        border-color: rgba(99, 102, 241, 0.5);
-        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.35);
-        color: #ffffff;
-    }
-
     /* Input Field Styling */
     .stTextInput > div > div > input {
         background-color: rgba(18, 18, 24, 0.8) !important;
@@ -353,21 +311,6 @@ with col_head1:
     """)
 with col_head2:
     st.link_button("⭐ GitHub Repo", "https://github.com/monishgowda05/repo-ready", use_container_width=True)
-
-
-# Quick Aceternity Floating Dock Bar
-st.markdown("""
-<div class="floating-dock-container">
-    <div class="floating-dock">
-        <a href="#audit-section" class="dock-item" title="Quick Audit">🔍</a>
-        <a href="#quick-presets" class="dock-item" title="Presets">⚡</a>
-        <a href="#overview-tab" class="dock-item" title="Compliance Score">📊</a>
-        <a href="#models-tab" class="dock-item" title="AI Model Attribution">🤖</a>
-        <a href="#autofix-tab" class="dock-item" title="One-Click Auto-Healer">✨</a>
-        <a href="https://github.com/monishgowda05/repo-ready" target="_blank" class="dock-item" title="GitHub">🐙</a>
-    </div>
-</div>
-""", unsafe_allow_html=True)
 
 
 # Quick presets
