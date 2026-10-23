@@ -372,19 +372,26 @@ if "last_audit" in st.session_state:
         btn_fix_col, btn_dl_col = st.columns([2, 2])
 
         with btn_fix_col:
-            if st.button("✨ Auto-Fix Repo (Inject License & Model Attribution)", type="primary", use_container_width=True):
-                with st.spinner("Applying automated compliance patches..."):
-                    fix_res = heal_repository(target_path, audit_data.model_dump())
-                    st.balloons()
-                    st.success(f"✓ {fix_res['license_action']}")
-                    st.success(f"✓ {fix_res['readme_action']}")
+            is_remote = target_path.startswith("http://") or target_path.startswith("https://")
+            if is_remote:
+                st.info("💡 **Remote GitHub Repo:** Auto-Fix modifies local files directly. To update this remote repo, download the patch on the right to submit a Pull Request, or clone the repo locally to auto-fix!")
+            else:
+                if st.button("✨ Auto-Fix Repo (Inject License & Model Attribution)", type="primary", use_container_width=True):
+                    with st.spinner("Applying automated compliance patches..."):
+                        try:
+                            fix_res = heal_repository(target_path, audit_data.model_dump())
+                            st.balloons()
+                            st.success(f"✓ {fix_res['license_action']}")
+                            st.success(f"✓ {fix_res['readme_action']}")
 
-                    # Re-scan to update scores in UI
-                    new_scan = scan_repository(target_path)
-                    new_audit = run_audit(new_scan, prefer_ollama=True, model_name=selected_model)
-                    st.session_state["last_scan"] = new_scan
-                    st.session_state["last_audit"] = new_audit
-                    st.rerun()
+                            # Re-scan to update scores in UI
+                            new_scan = scan_repository(target_path)
+                            new_audit = run_audit(new_scan, prefer_ollama=True, model_name=selected_model)
+                            st.session_state["last_scan"] = new_scan
+                            st.session_state["last_audit"] = new_audit
+                            st.rerun()
+                        except Exception as e:
+                            st.error(f"Could not apply auto-fix: {e}")
 
         with btn_dl_col:
             st.download_button(
