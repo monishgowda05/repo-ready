@@ -94,6 +94,32 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+def reset_demo_repo(target_dir: str = "./demo_broken_project"):
+    """Resets the demo folder back to its intentionally broken state for live judging."""
+    demo_path = Path(target_dir)
+    if not demo_path.exists():
+        demo_path.mkdir(parents=True, exist_ok=True)
+    
+    # 1. Remove LICENSE
+    lic = demo_path / "LICENSE"
+    if lic.exists():
+        try:
+            lic.unlink()
+        except Exception:
+            pass
+
+    # 2. Reset README.md to lazy text
+    readme = demo_path / "README.md"
+    readme.write_text("# My Cool AI Hackathon App\nBuilt with AI. Everything is 100% MIT licensed!\n", encoding="utf-8")
+
+    # 3. Ensure secret file is present
+    env_file = demo_path / ".env.backup"
+    if not env_file.exists():
+        k_name = "API" + "_KEY"
+        d_name = "DATABASE" + "_URL"
+        env_file.write_text(f'{k_name}="dummy_secret_for_scanner_test_987654321"\n{d_name}="postgres://admin:supersecret@localhost:5432/ai_app"\n', encoding="utf-8")
+
+
 # Sidebar configuration
 with st.sidebar:
     st.image("https://raw.githubusercontent.com/google/gemma_pytorch/main/assets/gemma_logo.png", width=70)
@@ -128,32 +154,6 @@ with st.sidebar:
     - **Latency:** ~1.5s
     """)
 
-def reset_demo_repo(target_dir: str = "./demo_broken_project"):
-    """Resets the demo folder back to its intentionally broken state for live judging."""
-    demo_path = Path(target_dir)
-    if not demo_path.exists():
-        demo_path.mkdir(parents=True, exist_ok=True)
-    
-    # 1. Remove LICENSE
-    lic = demo_path / "LICENSE"
-    if lic.exists():
-        try:
-            lic.unlink()
-        except Exception:
-            pass
-
-    # 2. Reset README.md to lazy text
-    readme = demo_path / "README.md"
-    readme.write_text("# My Cool AI Hackathon App\nBuilt with AI. Everything is 100% MIT licensed!\n", encoding="utf-8")
-
-    # 3. Ensure secret file is present
-    env_file = demo_path / ".env.backup"
-    if not env_file.exists():
-        k_name = "API" + "_KEY"
-        d_name = "DATABASE" + "_URL"
-        env_file.write_text(f'{k_name}="dummy_secret_for_scanner_test_987654321"\n{d_name}="postgres://admin:supersecret@localhost:5432/ai_app"\n', encoding="utf-8")
-
-
     st.markdown("---")
     st.subheader("🧪 Hackathon Demo Controls")
     if st.button("⚡ Load Broken Demo Repo (Judge Test)", use_container_width=True):
@@ -177,6 +177,35 @@ st.markdown("""
 Ensure your hackathon project satisfies open-source licensing rules, properly attributes 
 **Open-Weight AI Models** (Gemma, Llama, Mistral), and prevents credential leaks.
 """)
+
+# Quick presets
+st.markdown("**Quick Preset Repositories:** *(Click to test immediately)*")
+pcol1, pcol2, pcol3, pcol4 = st.columns(4)
+
+with pcol1:
+    if st.button("⚡ Broken Demo (20/100 Trap)", use_container_width=True):
+        reset_demo_repo("./demo_broken_project")
+        st.session_state["target_path_input"] = "./demo_broken_project"
+        st.session_state["run_audit_trigger"] = True
+        st.rerun()
+
+with pcol2:
+    if st.button("🛡️ RepoReady (Self-Audit)", use_container_width=True):
+        st.session_state["target_path_input"] = "."
+        st.session_state["run_audit_trigger"] = True
+        st.rerun()
+
+with pcol3:
+    if st.button("🚀 FastAPI (GitHub)", use_container_width=True):
+        st.session_state["target_path_input"] = "https://github.com/tiangolo/fastapi"
+        st.session_state["run_audit_trigger"] = True
+        st.rerun()
+
+with pcol4:
+    if st.button("🦙 Ollama Python (GitHub)", use_container_width=True):
+        st.session_state["target_path_input"] = "https://github.com/ollama/ollama-python"
+        st.session_state["run_audit_trigger"] = True
+        st.rerun()
 
 # Input controls
 col_in1, col_in2 = st.columns([4, 1])
