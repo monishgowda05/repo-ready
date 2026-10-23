@@ -224,12 +224,30 @@ def is_ollama_running(host: str = "127.0.0.1", port: int = 11434, timeout: float
         return False
 
 
+def is_model_installed(model_name: str = DEFAULT_MODEL) -> bool:
+    """Checks if the requested model is actually downloaded and ready in Ollama."""
+    if not is_ollama_running():
+        return False
+    try:
+        import ollama
+        models = ollama.list()
+        # Handle both dict and object response formats from ollama python library
+        model_list = models.get("models", []) if isinstance(models, dict) else getattr(models, "models", [])
+        for m in model_list:
+            name = m.get("name", "") if isinstance(m, dict) else getattr(m, "model", "")
+            if model_name in name:
+                return True
+        return False
+    except Exception:
+        return False
+
+
 def audit_with_ollama(scan_data: Dict[str, Any], model_name: str = DEFAULT_MODEL) -> AuditReport:
     """
     Performs audit using local Ollama model (e.g. gemma2:2b).
-    Falls back gracefully to deterministic audit if Ollama is unreachable.
+    Falls back gracefully to deterministic audit if Ollama or model is unavailable.
     """
-    if not is_ollama_running():
+    if not is_ollama_running() or not is_model_installed(model_name):
         return deterministic_audit(scan_data)
 
     try:

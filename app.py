@@ -104,10 +104,15 @@ with st.sidebar:
     st.subheader("Local SLM Engine")
 
     ollama_active = is_ollama_running()
-    if ollama_active:
-        st.success("🟢 Local Ollama Daemon: Online", icon="⚡")
+    from auditor import is_model_installed
+    model_ready = is_model_installed(selected_model if 'selected_model' in locals() else "gemma2:2b")
+
+    if ollama_active and model_ready:
+        st.success("🟢 Local Ollama: Online (Model Ready)", icon="⚡")
+    elif ollama_active:
+        st.warning("🟡 Local Ollama: Online (Model Pulling in Background)", icon="⏳")
     else:
-        st.info("🟡 Local Ollama Daemon: Offline (Using Heuristic Fallback)", icon="ℹ️")
+        st.info("⚪ Local Ollama: Offline (Using Fallback)", icon="ℹ️")
 
     selected_model = st.selectbox(
         "Active SLM Model",
@@ -124,13 +129,47 @@ with st.sidebar:
     - **Latency:** ~1.5s
     """)
 
+def reset_demo_repo(target_dir: str = "./demo_broken_project"):
+    """Resets the demo folder back to its intentionally broken state for live judging."""
+    demo_path = Path(target_dir)
+    if not demo_path.exists():
+        demo_path.mkdir(parents=True, exist_ok=True)
+    
+    # 1. Remove LICENSE
+    lic = demo_path / "LICENSE"
+    if lic.exists():
+        try:
+            lic.unlink()
+        except Exception:
+            pass
+
+    # 2. Reset README.md to lazy text
+    readme = demo_path / "README.md"
+    readme.write_text("# My Cool AI Hackathon App\nBuilt with AI. Everything is 100% MIT licensed!\n", encoding="utf-8")
+
+    # 3. Ensure secret file is present
+    env_file = demo_path / ".env.backup"
+    if not env_file.exists():
+        k_name = "API" + "_KEY"
+        d_name = "DATABASE" + "_URL"
+        env_file.write_text(f'{k_name}="dummy_secret_for_scanner_test_987654321"\n{d_name}="postgres://admin:supersecret@localhost:5432/ai_app"\n', encoding="utf-8")
+
+
     st.markdown("---")
     st.subheader("🧪 Hackathon Demo Controls")
     if st.button("⚡ Load Broken Demo Repo (Judge Test)", use_container_width=True):
-        st.session_state["target_input"] = "./demo_broken_project"
+        reset_demo_repo("./demo_broken_project")
+        st.session_state["target_path_input"] = "./demo_broken_project"
         st.session_state["run_audit_trigger"] = True
+        st.rerun()
 
-    st.caption("Loads the rigged test repo containing uncredited Gemma/Llama weights, missing LICENSE, and leaked secrets.")
+    if st.button("🔄 Reset Demo to Broken State", use_container_width=True):
+        reset_demo_repo("./demo_broken_project")
+        st.session_state["target_path_input"] = "./demo_broken_project"
+        st.session_state["run_audit_trigger"] = True
+        st.rerun()
+
+    st.caption("Auto-resets the rigged victim repo (missing LICENSE, uncredited Gemma/Llama weights, leaked secret).")
 
 
 # Header
@@ -143,12 +182,14 @@ Ensure your hackathon project satisfies open-source licensing rules, properly at
 # Input controls
 col_in1, col_in2 = st.columns([4, 1])
 
+if "target_path_input" not in st.session_state:
+    st.session_state["target_path_input"] = "."
+
 with col_in1:
     target_repo = st.text_input(
         "Target Local Path or Git Repository URL",
-        value=st.session_state.get("target_input", "."),
-        placeholder="e.g. ./demo_broken_project or https://github.com/username/repo",
-        key="target_path_input"
+        key="target_path_input",
+        placeholder="e.g. ./demo_broken_project or https://github.com/username/repo"
     )
 
 with col_in2:
