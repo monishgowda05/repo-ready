@@ -116,10 +116,10 @@ with st.sidebar:
         help="Google Gemma 2 (2B) is a 2.6B parameter Small Language Model ideal for offline edge inference."
     )
 
-    st.markdown("""
+    st.markdown(r"""
     **Model Specifications:**
     - **Architecture:** Gemma 2
-    - **Parameters:** 2.6B ($\le 10\\text{B}$ SLM)
+    - **Parameters:** 2.6B ($\le 10\text{B}$ SLM)
     - **Offline Execution:** Localhost
     - **Latency:** ~1.5s
     """)
