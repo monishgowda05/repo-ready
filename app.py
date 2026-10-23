@@ -49,66 +49,75 @@ st.markdown("""
     
     /* Background Radial Mesh Glow */
     .stApp {
-        background-color: #09090b !important;
+        background-color: #070709 !important;
         background-image: 
-            radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.14) 0%, transparent 50%),
-            radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
-            radial-gradient(circle at 10% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 40%) !important;
+            radial-gradient(circle at 50% -10%, rgba(99, 102, 241, 0.18) 0%, transparent 55%),
+            radial-gradient(circle at 95% 85%, rgba(168, 85, 247, 0.10) 0%, transparent 45%),
+            radial-gradient(circle at 5% 75%, rgba(16, 185, 129, 0.08) 0%, transparent 45%) !important;
     }
     
-    /* Aceternity Metric Cards with Glow Borders */
+    @keyframes pulseGlow {
+        0%, 100% { opacity: 0.85; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.02); }
+    }
+    @keyframes cardFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-3px); }
+    }
+
+    /* Aceternity Metric Cards with Glow Borders & Smooth Spring Physics */
     .metric-card {
-        background: rgba(18, 18, 24, 0.75);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        padding: 24px 20px;
-        text-align: center;
-        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        position: relative;
-        overflow: hidden;
+        background: rgba(18, 20, 29, 0.7) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 18px !important;
+        padding: 24px 20px !important;
+        text-align: center !important;
+        box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        position: relative !important;
+        overflow: hidden !important;
     }
     .metric-card:hover {
-        transform: translateY(-4px);
-        border-color: rgba(99, 102, 241, 0.4);
-        box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.2);
+        transform: translateY(-5px) scale(1.015) !important;
+        border-color: rgba(99, 102, 241, 0.45) !important;
+        box-shadow: 0 24px 48px -12px rgba(99, 102, 241, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
     }
     
     .card-glow-green {
-        border-color: rgba(16, 185, 129, 0.3);
-        box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.2);
+        border-color: rgba(16, 185, 129, 0.35) !important;
+        box-shadow: 0 12px 36px -10px rgba(16, 185, 129, 0.25) !important;
     }
     .card-glow-yellow {
-        border-color: rgba(245, 158, 11, 0.3);
-        box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.2);
+        border-color: rgba(245, 158, 11, 0.35) !important;
+        box-shadow: 0 12px 36px -10px rgba(245, 158, 11, 0.25) !important;
     }
     .card-glow-red {
-        border-color: rgba(239, 68, 68, 0.3);
-        box-shadow: 0 10px 30px -10px rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.35) !important;
+        box-shadow: 0 12px 36px -10px rgba(239, 68, 68, 0.25) !important;
     }
     
     .metric-value-green {
-        font-size: 3.2rem;
-        font-weight: 800;
-        color: #10B981;
-        margin: 0;
-        text-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        font-size: 3.4rem !important;
+        font-weight: 800 !important;
+        color: #10B981 !important;
+        margin: 0 !important;
+        text-shadow: 0 0 24px rgba(16, 185, 129, 0.45) !important;
     }
     .metric-value-yellow {
-        font-size: 3.2rem;
-        font-weight: 800;
-        color: #F59E0B;
-        margin: 0;
-        text-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+        font-size: 3.4rem !important;
+        font-weight: 800 !important;
+        color: #F59E0B !important;
+        margin: 0 !important;
+        text-shadow: 0 0 24px rgba(245, 158, 11, 0.45) !important;
     }
     .metric-value-red {
-        font-size: 3.2rem;
-        font-weight: 800;
-        color: #EF4444;
-        margin: 0;
-        text-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+        font-size: 3.4rem !important;
+        font-weight: 800 !important;
+        color: #EF4444 !important;
+        margin: 0 !important;
+        text-shadow: 0 0 24px rgba(239, 68, 68, 0.45) !important;
     }
     .metric-label {
         font-size: 0.95rem;
@@ -253,9 +262,17 @@ def reset_demo_repo(target_dir: str = "./demo_broken_project"):
 
 # Sidebar configuration
 with st.sidebar:
-    st.image("https://raw.githubusercontent.com/google/gemma_pytorch/main/assets/gemma_logo.png", width=64)
-    st.title("RepoReady Engine")
-    st.caption("Open-Weight AI Compliance & Hacktoberfest Auditor")
+    st.markdown("""
+    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 8px;">
+        <div style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.25)); border: 1px solid rgba(168, 85, 247, 0.4); box-shadow: 0 0 24px rgba(99, 102, 241, 0.35); font-size: 24px;">
+            🛡️
+        </div>
+        <div>
+            <div style="font-size: 1.25rem; font-weight: 700; color: #ffffff; letter-spacing: -0.02em;">RepoReady</div>
+            <div style="font-size: 0.75rem; color: #a1a1aa; font-weight: 500;">Compliance Engine</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("---")
     st.subheader("⚡ Local SLM Engine")
@@ -471,6 +488,22 @@ if "last_audit" in st.session_state:
                     st.info(rec, icon="💡")
             else:
                 st.write("Everything looks great. No immediate actions required.")
+
+        st.markdown("---")
+        with st.expander("📐 Mathematical Scoring Rubric & Criteria Breakdown (Judge Reference)", expanded=True):
+            st.markdown("""
+            | Evaluation Criteria | Max Weight | What RepoReady Verifies | Objective Deduction |
+            | :--- | :--- | :--- | :--- |
+            | **1. OSI Code License** | **28 pts** | Standard OSI License (`LICENSE` file: MIT, Apache, BSD) | **-28** if missing, **-15** if unrecognized |
+            | **2. Open-Weight AI Attribution** | **24 pts** | Creator Terms of Use linked in `README.md` (Gemma, Llama) | **-12** per uncredited model (max -24) |
+            | **3. Documentation & Quickstart** | **20 pts** | Comprehensive `README.md` with reproducibility setup | **-20** if missing, **-12** if sparse (<120 chars) |
+            | **4. Secret & Env Leak Protection** | **16 pts** | Zero tracked `.env`, `.key`, or credentials in Git tree | **-16** if secret files committed |
+            | **5. Code Safety & Hardcoded Keys** | **12 pts** | Zero hardcoded API tokens or secrets in code lines | **-12** if credential patterns matched |
+            
+            > **Objective Deterministic Scoring Formula:**  
+            > $\\text{Readiness Score} = \\max(0, 100 - \\sum \\text{Violations})$  
+            > *Every point deduction is mathematically grounded, verifiable, and conforms to Hacktoberfest challenge rules.*
+            """)
 
     with tab_models:
         st.subheader("Detected AI Models & Provider Licensing")
